@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>超コンパクト電卓</title>
+<title>コンパクト電卓（コピーボタンなし）</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -15,43 +15,43 @@ body {
     min-height:100vh;
 }
 .calculator {
-    transform: scale(0.55);
+    transform: scale(0.60);
     transform-origin: top center;
     background:#fafafa;
     border:2px solid #594e67;
-    border-radius:10px;
-    padding:5px;
+    border-radius:12px;
+    padding:10px;
     width:100%;
-    max-width:340px;
-    box-shadow:0 1px 10px rgba(89,78,103,0.15);
+    max-width:360px;
+    box-shadow:0 2px 12px rgba(89,78,103,0.15);
 }
 .display {
     background:#594e67;
-    border-radius:6px;
-    padding:6px 6px;
-    margin-bottom:6px;
+    border-radius:8px;
+    padding:10px 8px;
+    margin-bottom:10px;
     text-align:right;
-    min-height:50px;
+    min-height:70px;
     display:flex;
     flex-direction:column;
     justify-content:flex-end;
     overflow-x:auto;
 }
-.display-secondary { color:rgba(250,250,250,0.6); font-size:12px; min-height:16px; margin-bottom:2px; font-weight:300; }
-.display-main { color:#fafafa; font-size:22px; font-weight:300; word-break:break-all; letter-spacing:0.5px; }
+.display-secondary { color:rgba(250,250,250,0.6); font-size:14px; min-height:20px; margin-bottom:4px; font-weight:300; }
+.display-main { color:#fafafa; font-size:28px; font-weight:300; word-break:break-all; letter-spacing:0.5px; }
 
 .buttons {
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:4px;
+    gap:6px;
 }
 button {
     background:#fafafa;
     border:2px solid #594e67;
-    border-radius:5px;
+    border-radius:6px;
     color:#594e67;
-    font-size:16px;
-    height:36px;
+    font-size:18px;
+    height:45px;
     cursor:pointer;
     display:flex;
     align-items:center;
