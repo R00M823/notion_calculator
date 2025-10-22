@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>コンパクト電卓（コピーボタンなし）</title>
+<title>コンパクト電卓（Notion向け・縦長20%拡大）</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -15,43 +15,54 @@ body {
     min-height:100vh;
 }
 .calculator {
-    transform: scale(0.60);
+    transform: scale(0.72);
     transform-origin: top center;
     background:#fafafa;
     border:2px solid #594e67;
     border-radius:12px;
-    padding:10px;
+    padding:12px;
     width:100%;
-    max-width:360px;
+    max-width:380px;
     box-shadow:0 2px 12px rgba(89,78,103,0.15);
 }
 .display {
     background:#594e67;
     border-radius:8px;
-    padding:10px 8px;
-    margin-bottom:10px;
+    padding:14px 10px;
+    margin-bottom:14px;
     text-align:right;
-    min-height:70px;
+    min-height:90px;
     display:flex;
     flex-direction:column;
     justify-content:flex-end;
     overflow-x:auto;
 }
-.display-secondary { color:rgba(250,250,250,0.6); font-size:14px; min-height:20px; margin-bottom:4px; font-weight:300; }
-.display-main { color:#fafafa; font-size:28px; font-weight:300; word-break:break-all; letter-spacing:0.5px; }
-
+.display-secondary {
+    color:rgba(250,250,250,0.6);
+    font-size:15px;
+    min-height:20px;
+    margin-bottom:6px;
+    font-weight:300;
+}
+.display-main {
+    color:#fafafa;
+    font-size:30px;
+    font-weight:300;
+    word-break:break-all;
+    letter-spacing:0.5px;
+}
 .buttons {
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:6px;
+    gap:7px;
 }
 button {
     background:#fafafa;
     border:2px solid #594e67;
     border-radius:6px;
     color:#594e67;
-    font-size:18px;
-    height:45px;
+    font-size:19px;
+    height:52px;
     cursor:pointer;
     display:flex;
     align-items:center;
