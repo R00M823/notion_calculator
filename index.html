@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>コンパクト電卓</title>
+<title>超コンパクト電卓</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -15,59 +15,43 @@ body {
     min-height:100vh;
 }
 .calculator {
-    transform: scale(0.60);
+    transform: scale(0.55);
     transform-origin: top center;
     background:#fafafa;
     border:2px solid #594e67;
-    border-radius:12px;
-    padding:10px;
+    border-radius:10px;
+    padding:5px;
     width:100%;
-    max-width:360px;
-    box-shadow:0 2px 12px rgba(89,78,103,0.15);
+    max-width:340px;
+    box-shadow:0 1px 10px rgba(89,78,103,0.15);
 }
 .display {
     background:#594e67;
-    border-radius:8px;
-    padding:10px 8px;
-    margin-bottom:10px;
+    border-radius:6px;
+    padding:6px 6px;
+    margin-bottom:6px;
     text-align:right;
-    min-height:70px;
+    min-height:50px;
     display:flex;
     flex-direction:column;
     justify-content:flex-end;
-    position:relative;
     overflow-x:auto;
 }
-.copy-btn {
-    position:absolute;
-    top:6px;
-    left:6px;
-    background:rgba(250,250,250,0.2);
-    border:1px solid rgba(250,250,250,0.3);
-    border-radius:6px;
-    color:#fafafa;
-    font-size:12px;
-    padding:3px 6px;
-    cursor:pointer;
-}
-.copy-btn:hover{ background:rgba(250,250,250,0.3); border-color:rgba(250,250,250,0.5);}
-.copy-btn.copied{ background:#d5b9ca; border-color:#d5b9ca; color:#594e67;}
-
-.display-secondary { color:rgba(250,250,250,0.6); font-size:14px; min-height:20px; margin-bottom:4px; font-weight:300; }
-.display-main { color:#fafafa; font-size:28px; font-weight:300; word-break:break-all; letter-spacing:0.5px; }
+.display-secondary { color:rgba(250,250,250,0.6); font-size:12px; min-height:16px; margin-bottom:2px; font-weight:300; }
+.display-main { color:#fafafa; font-size:22px; font-weight:300; word-break:break-all; letter-spacing:0.5px; }
 
 .buttons {
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:6px;
+    gap:4px;
 }
 button {
     background:#fafafa;
     border:2px solid #594e67;
-    border-radius:6px;
+    border-radius:5px;
     color:#594e67;
-    font-size:18px;
-    height:45px;
+    font-size:16px;
+    height:36px;
     cursor:pointer;
     display:flex;
     align-items:center;
@@ -85,7 +69,6 @@ button:active{ background:#e8e8e8; }
 <body>
 <div class="calculator">
     <div class="display">
-        <button class="copy-btn" id="copyBtn" onclick="copyResult()">Copy</button>
         <div class="display-secondary" id="secondaryDisplay"></div>
         <div class="display-main" id="mainDisplay">0</div>
     </div>
@@ -117,14 +100,63 @@ button:active{ background:#e8e8e8; }
 let currentInput='0', previousInput='', operator='', shouldResetDisplay=false;
 const mainDisplay=document.getElementById('mainDisplay');
 const secondaryDisplay=document.getElementById('secondaryDisplay');
-function updateDisplay(){ mainDisplay.textContent=currentInput; secondaryDisplay.textContent=(previousInput&&operator)?`${previousInput} ${operator}`:''; }
-function inputNumber(num){ if(shouldResetDisplay){currentInput=num; shouldResetDisplay=false;} else { if(currentInput==='0' && num!=='.') currentInput=num; else if(num==='.'&&currentInput.includes('.')) return; else currentInput+=num;} updateDisplay(); }
-function inputOperator(op){ if(operator && !shouldResetDisplay) calculate(); previousInput=currentInput; operator=op; shouldResetDisplay=true; updateDisplay(); }
-function calculate(){ if(!operator || !previousInput) return; const prev=parseFloat(previousInput); const current=parseFloat(currentInput); let result; switch(operator){ case '+': result=prev+current; break; case '-': result=prev-current; break; case '×': result=prev*current; break; case '÷': result=current===0?'Error':prev/current; break; case '%': result=prev*(current/100); break; } if(result==='Error'||isNaN(result)||!isFinite(result)) currentInput='Error'; else currentInput=parseFloat(result.toPrecision(12)).toString(); operator=''; previousInput=''; shouldResetDisplay=true; updateDisplay(); }
+
+function updateDisplay(){ 
+    mainDisplay.textContent=currentInput; 
+    secondaryDisplay.textContent=(previousInput&&operator)?`${previousInput} ${operator}`:''; 
+}
+
+function inputNumber(num){ 
+    if(shouldResetDisplay){currentInput=num; shouldResetDisplay=false;} 
+    else { 
+        if(currentInput==='0' && num!=='.') currentInput=num; 
+        else if(num==='.'&&currentInput.includes('.')) return; 
+        else currentInput+=num;
+    } 
+    updateDisplay(); 
+}
+
+function inputOperator(op){ 
+    if(operator && !shouldResetDisplay) calculate(); 
+    previousInput=currentInput; 
+    operator=op; 
+    shouldResetDisplay=true; 
+    updateDisplay(); 
+}
+
+function calculate(){ 
+    if(!operator || !previousInput) return; 
+    const prev=parseFloat(previousInput); 
+    const current=parseFloat(currentInput); 
+    let result; 
+    switch(operator){
+        case '+': result=prev+current; break; 
+        case '-': result=prev-current; break; 
+        case '×': result=prev*current; break; 
+        case '÷': result=current===0?'Error':prev/current; break; 
+        case '%': result=prev*(current/100); break; 
+    } 
+    if(result==='Error'||isNaN(result)||!isFinite(result)) currentInput='Error'; 
+    else currentInput=parseFloat(result.toPrecision(12)).toString(); 
+    operator=''; previousInput=''; shouldResetDisplay=true; 
+    updateDisplay(); 
+}
+
 function clearAll(){currentInput='0';previousInput='';operator='';shouldResetDisplay=false;updateDisplay();}
 function deleteOne(){currentInput=(currentInput.length===1||currentInput==='Error')?'0':currentInput.slice(0,-1);updateDisplay();}
-function copyResult(){const copyBtn=document.getElementById('copyBtn');navigator.clipboard.writeText(currentInput).then(()=>{copyBtn.textContent='✓ Copied!';copyBtn.classList.add('copied');setTimeout(()=>{copyBtn.textContent='Copy';copyBtn.classList.remove('copied');},1500);}).catch(err=>console.error('コピーに失敗しました:',err));}
-document.addEventListener('keydown',e=>{ if((e.key>='0'&&e.key<='9')||e.key=='.') inputNumber(e.key); else if(['+','-'].includes(e.key)) inputOperator(e.key); else if(e.key=='*') inputOperator('×'); else if(e.key=='/'){e.preventDefault();inputOperator('÷');} else if(e.key=='%') inputOperator('%'); else if(e.key=='Enter'||e.key=='=') calculate(); else if(e.key=='Escape') clearAll(); else if(e.key=='Backspace') deleteOne(); });
+
+// キーボード対応
+document.addEventListener('keydown',e=>{
+    if((e.key>='0'&&e.key<='9')||e.key=='.') inputNumber(e.key);
+    else if(['+','-'].includes(e.key)) inputOperator(e.key);
+    else if(e.key=='*') inputOperator('×');
+    else if(e.key=='/'){e.preventDefault();inputOperator('÷');}
+    else if(e.key=='%') inputOperator('%');
+    else if(e.key=='Enter'||e.key=='=') calculate();
+    else if(e.key=='Escape') clearAll();
+    else if(e.key=='Backspace') deleteOne();
+});
+
 updateDisplay();
 </script>
 </body>
