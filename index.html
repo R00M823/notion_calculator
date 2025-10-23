@@ -1,174 +1,247 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>コンパクト電卓（Notion向け・縦長20%拡大）</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans JP',sans-serif;
-    background:#fafafa;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-.calculator {
-    transform: scale(0.72);
-    transform-origin: top center;
-    background:#fafafa;
-    border:2px solid #594e67;
-    border-radius:12px;
-    padding:12px;
-    width:100%;
-    max-width:380px;
-    box-shadow:0 2px 12px rgba(89,78,103,0.15);
-}
-.display {
-    background:#594e67;
-    border-radius:8px;
-    padding:14px 10px;
-    margin-bottom:14px;
-    text-align:right;
-    min-height:90px;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
-    overflow-x:auto;
-}
-.display-secondary {
-    color:rgba(250,250,250,0.6);
-    font-size:15px;
-    min-height:20px;
-    margin-bottom:6px;
-    font-weight:300;
-}
-.display-main {
-    color:#fafafa;
-    font-size:30px;
-    font-weight:300;
-    word-break:break-all;
-    letter-spacing:0.5px;
-}
-.buttons {
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:7px;
-}
-button {
-    background:#fafafa;
-    border:2px solid #594e67;
-    border-radius:6px;
-    color:#594e67;
-    font-size:19px;
-    height:52px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-button:hover{ background:#f0f0f0; }
-button:active{ background:#e8e8e8; }
-.btn-operator { background:#fafafa; }
-.btn-clear { background:#594e67; color:#fafafa; border-color:#594e67; }
-.btn-clear:hover { background:#6b5d7a; border-color:#6b5d7a; }
-.btn-equals { background:#d5b9ca; color:#594e67; border-color:#d5b9ca; }
-.btn-equals:hover { background:#dfc7da; border-color:#dfc7da; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>シンプル電卓</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+      background: transparent; /* 背景透過でNotionに自然に溶け込む */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .calculator {
+      background: #fafafa;
+      border: 2.5px solid #594e67;
+      border-radius: 14px;
+      padding: 25px 25px;
+      width: 300px;
+      box-shadow: 0 3px 12px rgba(89, 78, 103, 0.1);
+    }
+
+    .display {
+      background: #594e67;
+      border-radius: 10px;
+      padding: 25px 18px;
+      margin-bottom: 20px;
+      text-align: right;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .display-secondary {
+      color: rgba(250, 250, 250, 0.6);
+      font-size: 16px;
+      min-height: 24px;
+      margin-bottom: 6px;
+      font-weight: 300;
+    }
+
+    .display-main {
+      color: #fafafa;
+      font-size: 42px;
+      font-weight: 300;
+      word-break: break-all;
+      letter-spacing: 0.4px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      background: #fafafa;
+      border: 2px solid #594e67;
+      border-radius: 8px;
+      color: #594e67;
+      font-size: 22px;
+      height: 62px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button:hover {
+      background: #f0f0f0;
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+      background: #e8e8e8;
+    }
+
+    .btn-clear {
+      background: #594e67;
+      color: #fafafa;
+      font-weight: 500;
+    }
+
+    .btn-clear:hover {
+      background: #6b5d7a;
+    }
+
+    .btn-equals {
+      background: #d5b9ca;
+      color: #594e67;
+      font-weight: 500;
+      border-color: #d5b9ca;
+    }
+
+    .btn-equals:hover {
+      background: #dfc7da;
+      border-color: #dfc7da;
+    }
+  </style>
 </head>
 <body>
-<div class="calculator">
+  <div class="calculator">
     <div class="display">
-        <div class="display-secondary" id="secondaryDisplay"></div>
-        <div class="display-main" id="mainDisplay">0</div>
+      <div class="display-secondary" id="secondaryDisplay"></div>
+      <div class="display-main" id="mainDisplay">0</div>
     </div>
+
     <div class="buttons">
-        <button class="btn-clear" onclick="clearAll()">AC</button>
-        <button class="btn-operator" onclick="deleteOne()">⌫</button>
-        <button class="btn-operator" onclick="inputOperator('%')">%</button>
-        <button class="btn-operator" onclick="inputOperator('÷')">÷</button>
-        <button onclick="inputNumber('7')">7</button>
-        <button onclick="inputNumber('8')">8</button>
-        <button onclick="inputNumber('9')">9</button>
-        <button class="btn-operator" onclick="inputOperator('×')">×</button>
-        <button onclick="inputNumber('4')">4</button>
-        <button onclick="inputNumber('5')">5</button>
-        <button onclick="inputNumber('6')">6</button>
-        <button class="btn-operator" onclick="inputOperator('-')">-</button>
-        <button onclick="inputNumber('1')">1</button>
-        <button onclick="inputNumber('2')">2</button>
-        <button onclick="inputNumber('3')">3</button>
-        <button class="btn-operator" onclick="inputOperator('+')">+</button>
-        <button onclick="inputNumber('0')">0</button>
-        <button onclick="inputNumber('00')">00</button>
-        <button onclick="inputNumber('.')">.</button>
-        <button class="btn-equals" onclick="calculate()">=</button>
+      <button class="btn-clear" onclick="clearAll()">AC</button>
+      <button onclick="deleteOne()">⌫</button>
+      <button onclick="inputOperator('%')">%</button>
+      <button onclick="inputOperator('÷')">÷</button>
+
+      <button onclick="inputNumber('7')">7</button>
+      <button onclick="inputNumber('8')">8</button>
+      <button onclick="inputNumber('9')">9</button>
+      <button onclick="inputOperator('×')">×</button>
+
+      <button onclick="inputNumber('4')">4</button>
+      <button onclick="inputNumber('5')">5</button>
+      <button onclick="inputNumber('6')">6</button>
+      <button onclick="inputOperator('-')">-</button>
+
+      <button onclick="inputNumber('1')">1</button>
+      <button onclick="inputNumber('2')">2</button>
+      <button onclick="inputNumber('3')">3</button>
+      <button onclick="inputOperator('+')">+</button>
+
+      <button onclick="inputNumber('0')">0</button>
+      <button onclick="inputNumber('00')">00</button>
+      <button onclick="inputNumber('.')">.</button>
+      <button class="btn-equals" onclick="calculate()">=</button>
     </div>
-</div>
+  </div>
 
-<script>
-let currentInput='0', previousInput='', operator='', shouldResetDisplay=false;
-const mainDisplay=document.getElementById('mainDisplay');
-const secondaryDisplay=document.getElementById('secondaryDisplay');
+  <script>
+    let currentInput = '0';
+    let previousInput = '';
+    let operator = '';
+    let shouldResetDisplay = false;
 
-function updateDisplay(){ 
-    mainDisplay.textContent=currentInput; 
-    secondaryDisplay.textContent=(previousInput&&operator)?`${previousInput} ${operator}`:''; 
-}
+    const mainDisplay = document.getElementById('mainDisplay');
+    const secondaryDisplay = document.getElementById('secondaryDisplay');
 
-function inputNumber(num){ 
-    if(shouldResetDisplay){currentInput=num; shouldResetDisplay=false;} 
-    else { 
-        if(currentInput==='0' && num!=='.') currentInput=num; 
-        else if(num==='.'&&currentInput.includes('.')) return; 
-        else currentInput+=num;
-    } 
-    updateDisplay(); 
-}
+    function updateDisplay() {
+      mainDisplay.textContent = currentInput;
+      if (previousInput && operator) {
+        secondaryDisplay.textContent = `${previousInput} ${operator}`;
+      } else {
+        secondaryDisplay.textContent = '';
+      }
+    }
 
-function inputOperator(op){ 
-    if(operator && !shouldResetDisplay) calculate(); 
-    previousInput=currentInput; 
-    operator=op; 
-    shouldResetDisplay=true; 
-    updateDisplay(); 
-}
+    function inputNumber(num) {
+      if (shouldResetDisplay) {
+        currentInput = num;
+        shouldResetDisplay = false;
+      } else {
+        if (currentInput === '0' && num !== '.') {
+          currentInput = num;
+        } else if (num === '.' && currentInput.includes('.')) {
+          return;
+        } else {
+          currentInput += num;
+        }
+      }
+      updateDisplay();
+    }
 
-function calculate(){ 
-    if(!operator || !previousInput) return; 
-    const prev=parseFloat(previousInput); 
-    const current=parseFloat(currentInput); 
-    let result; 
-    switch(operator){
-        case '+': result=prev+current; break; 
-        case '-': result=prev-current; break; 
-        case '×': result=prev*current; break; 
-        case '÷': result=current===0?'Error':prev/current; break; 
-        case '%': result=prev*(current/100); break; 
-    } 
-    if(result==='Error'||isNaN(result)||!isFinite(result)) currentInput='Error'; 
-    else currentInput=parseFloat(result.toPrecision(12)).toString(); 
-    operator=''; previousInput=''; shouldResetDisplay=true; 
-    updateDisplay(); 
-}
+    function inputOperator(op) {
+      if (operator && !shouldResetDisplay) {
+        calculate();
+      }
+      previousInput = currentInput;
+      operator = op;
+      shouldResetDisplay = true;
+      updateDisplay();
+    }
 
-function clearAll(){currentInput='0';previousInput='';operator='';shouldResetDisplay=false;updateDisplay();}
-function deleteOne(){currentInput=(currentInput.length===1||currentInput==='Error')?'0':currentInput.slice(0,-1);updateDisplay();}
+    function calculate() {
+      if (!operator || !previousInput) return;
+      const prev = parseFloat(previousInput);
+      const current = parseFloat(currentInput);
+      let result;
 
-// キーボード対応
-document.addEventListener('keydown',e=>{
-    if((e.key>='0'&&e.key<='9')||e.key=='.') inputNumber(e.key);
-    else if(['+','-'].includes(e.key)) inputOperator(e.key);
-    else if(e.key=='*') inputOperator('×');
-    else if(e.key=='/'){e.preventDefault();inputOperator('÷');}
-    else if(e.key=='%') inputOperator('%');
-    else if(e.key=='Enter'||e.key=='=') calculate();
-    else if(e.key=='Escape') clearAll();
-    else if(e.key=='Backspace') deleteOne();
-});
+      switch (operator) {
+        case '+': result = prev + current; break;
+        case '-': result = prev - current; break;
+        case '×': result = prev * current; break;
+        case '÷': result = current !== 0 ? prev / current : 'Error'; break;
+        case '%': result = prev % current; break;
+      }
 
-updateDisplay();
-</script>
+      currentInput = result === 'Error' ? 'Error' : String(Math.round(result * 1e8) / 1e8);
+      operator = '';
+      previousInput = '';
+      shouldResetDisplay = true;
+      updateDisplay();
+    }
+
+    function clearAll() {
+      currentInput = '0';
+      previousInput = '';
+      operator = '';
+      shouldResetDisplay = false;
+      updateDisplay();
+    }
+
+    function deleteOne() {
+      if (currentInput.length === 1 || currentInput === 'Error') {
+        currentInput = '0';
+      } else {
+        currentInput = currentInput.slice(0, -1);
+      }
+      updateDisplay();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.key >= '0' && e.key <= '9') || e.key === '.') inputNumber(e.key);
+      else if (['+', '-'].includes(e.key)) inputOperator(e.key);
+      else if (e.key === '*') inputOperator('×');
+      else if (e.key === '/') { e.preventDefault(); inputOperator('÷'); }
+      else if (e.key === '%') inputOperator('%');
+      else if (e.key === 'Enter' || e.key === '=') calculate();
+      else if (e.key === 'Escape') clearAll();
+      else if (e.key === 'Backspace') deleteOne();
+    });
+
+    updateDisplay();
+  </script>
 </body>
 </html>
