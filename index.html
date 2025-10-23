@@ -1,174 +1,209 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>コンパクト電卓（Notion向け・縦長20%拡大）</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans JP',sans-serif;
-    background:#fafafa;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-.calculator {
-    transform: scale(0.72);
-    transform-origin: top center;
-    background:#fafafa;
-    border:2px solid #594e67;
-    border-radius:12px;
-    padding:12px;
-    width:100%;
-    max-width:380px;
-    box-shadow:0 2px 12px rgba(89,78,103,0.15);
-}
-.display {
-    background:#594e67;
-    border-radius:8px;
-    padding:14px 10px;
-    margin-bottom:14px;
-    text-align:right;
-    min-height:90px;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
-    overflow-x:auto;
-}
-.display-secondary {
-    color:rgba(250,250,250,0.6);
-    font-size:15px;
-    min-height:20px;
-    margin-bottom:6px;
-    font-weight:300;
-}
-.display-main {
-    color:#fafafa;
-    font-size:30px;
-    font-weight:300;
-    word-break:break-all;
-    letter-spacing:0.5px;
-}
-.buttons {
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:7px;
-}
-button {
-    background:#fafafa;
-    border:2px solid #594e67;
-    border-radius:6px;
-    color:#594e67;
-    font-size:19px;
-    height:52px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-button:hover{ background:#f0f0f0; }
-button:active{ background:#e8e8e8; }
-.btn-operator { background:#fafafa; }
-.btn-clear { background:#594e67; color:#fafafa; border-color:#594e67; }
-.btn-clear:hover { background:#6b5d7a; border-color:#6b5d7a; }
-.btn-equals { background:#d5b9ca; color:#594e67; border-color:#d5b9ca; }
-.btn-equals:hover { background:#dfc7da; border-color:#dfc7da; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compact Calculator</title>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --text: #594e67;
+            --accent: #d5b9ca;
+            --dark: #594e67;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Inter", "Hiragino Sans", "Helvetica Neue", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .calculator {
+            width: 100%;
+            max-width: 320px;
+            border: 2px solid var(--text);
+            border-radius: 16px;
+            padding: 1rem;
+            background: var(--bg);
+            box-shadow: 0 2px 12px rgba(89, 78, 103, 0.1);
+        }
+        .display {
+            background: var(--dark);
+            color: #fff;
+            font-size: 2rem;
+            text-align: right;
+            padding: 1.2rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            min-height: 4rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        button {
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--text);
+            border-radius: 10px;
+            padding: 1.1rem 0;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-weight: 400;
+        }
+        button:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(0);
+            background: #e8e8e8;
+        }
+        .btn-ac {
+            background: var(--dark);
+            color: #fff;
+            border-color: var(--dark);
+            font-weight: 500;
+        }
+        .btn-ac:hover {
+            background: #6b5d7a;
+            border-color: #6b5d7a;
+        }
+        .btn-equal {
+            background: var(--accent);
+            color: var(--dark);
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+        .btn-equal:hover {
+            background: #dfc7da;
+            border-color: #dfc7da;
+        }
+    </style>
 </head>
 <body>
-<div class="calculator">
-    <div class="display">
-        <div class="display-secondary" id="secondaryDisplay"></div>
-        <div class="display-main" id="mainDisplay">0</div>
+    <div class="calculator" id="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="btn-ac" onclick="clearDisplay()">AC</button>
+            <button onclick="deleteLast()">⌫</button>
+            <button onclick="appendValue('%')">%</button>
+            <button onclick="appendValue('+')">+</button>
+            
+            <button onclick="appendValue('7')">7</button>
+            <button onclick="appendValue('8')">8</button>
+            <button onclick="appendValue('9')">9</button>
+            <button onclick="appendValue('*')">×</button>
+            
+            <button onclick="appendValue('4')">4</button>
+            <button onclick="appendValue('5')">5</button>
+            <button onclick="appendValue('6')">6</button>
+            <button onclick="appendValue('-')">-</button>
+            
+            <button onclick="appendValue('1')">1</button>
+            <button onclick="appendValue('2')">2</button>
+            <button onclick="appendValue('3')">3</button>
+            <button onclick="appendValue('/')">÷</button>
+            
+            <button onclick="appendValue('0')">0</button>
+            <button onclick="appendValue('00')">00</button>
+            <button onclick="appendValue('.')">.</button>
+            <button class="btn-equal" onclick="calculate()">=</button>
+        </div>
     </div>
-    <div class="buttons">
-        <button class="btn-clear" onclick="clearAll()">AC</button>
-        <button class="btn-operator" onclick="deleteOne()">⌫</button>
-        <button class="btn-operator" onclick="inputOperator('%')">%</button>
-        <button class="btn-operator" onclick="inputOperator('÷')">÷</button>
-        <button onclick="inputNumber('7')">7</button>
-        <button onclick="inputNumber('8')">8</button>
-        <button onclick="inputNumber('9')">9</button>
-        <button class="btn-operator" onclick="inputOperator('×')">×</button>
-        <button onclick="inputNumber('4')">4</button>
-        <button onclick="inputNumber('5')">5</button>
-        <button onclick="inputNumber('6')">6</button>
-        <button class="btn-operator" onclick="inputOperator('-')">-</button>
-        <button onclick="inputNumber('1')">1</button>
-        <button onclick="inputNumber('2')">2</button>
-        <button onclick="inputNumber('3')">3</button>
-        <button class="btn-operator" onclick="inputOperator('+')">+</button>
-        <button onclick="inputNumber('0')">0</button>
-        <button onclick="inputNumber('00')">00</button>
-        <button onclick="inputNumber('.')">.</button>
-        <button class="btn-equals" onclick="calculate()">=</button>
-    </div>
-</div>
 
-<script>
-let currentInput='0', previousInput='', operator='', shouldResetDisplay=false;
-const mainDisplay=document.getElementById('mainDisplay');
-const secondaryDisplay=document.getElementById('secondaryDisplay');
+    <script>
+        let currentInput = '';
+        const display = document.getElementById('display');
+        const calculator = document.getElementById('calculator');
 
-function updateDisplay(){ 
-    mainDisplay.textContent=currentInput; 
-    secondaryDisplay.textContent=(previousInput&&operator)?`${previousInput} ${operator}`:''; 
-}
+        function updateDisplay() {
+            display.textContent = currentInput || '0';
+            adjustHeight();
+        }
 
-function inputNumber(num){ 
-    if(shouldResetDisplay){currentInput=num; shouldResetDisplay=false;} 
-    else { 
-        if(currentInput==='0' && num!=='.') currentInput=num; 
-        else if(num==='.'&&currentInput.includes('.')) return; 
-        else currentInput+=num;
-    } 
-    updateDisplay(); 
-}
+        function appendValue(value) {
+            if (currentInput === '0' && value !== '.') {
+                currentInput = value;
+            } else if (value === '.' && currentInput.includes('.')) {
+                return;
+            } else {
+                currentInput += value;
+            }
+            updateDisplay();
+        }
 
-function inputOperator(op){ 
-    if(operator && !shouldResetDisplay) calculate(); 
-    previousInput=currentInput; 
-    operator=op; 
-    shouldResetDisplay=true; 
-    updateDisplay(); 
-}
+        function clearDisplay() {
+            currentInput = '';
+            updateDisplay();
+        }
 
-function calculate(){ 
-    if(!operator || !previousInput) return; 
-    const prev=parseFloat(previousInput); 
-    const current=parseFloat(currentInput); 
-    let result; 
-    switch(operator){
-        case '+': result=prev+current; break; 
-        case '-': result=prev-current; break; 
-        case '×': result=prev*current; break; 
-        case '÷': result=current===0?'Error':prev/current; break; 
-        case '%': result=prev*(current/100); break; 
-    } 
-    if(result==='Error'||isNaN(result)||!isFinite(result)) currentInput='Error'; 
-    else currentInput=parseFloat(result.toPrecision(12)).toString(); 
-    operator=''; previousInput=''; shouldResetDisplay=true; 
-    updateDisplay(); 
-}
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            updateDisplay();
+        }
 
-function clearAll(){currentInput='0';previousInput='';operator='';shouldResetDisplay=false;updateDisplay();}
-function deleteOne(){currentInput=(currentInput.length===1||currentInput==='Error')?'0':currentInput.slice(0,-1);updateDisplay();}
+        function calculate() {
+            try {
+                // ×を*に、÷を/に変換
+                const expression = currentInput.replace(/×/g, '*').replace(/÷/g, '/');
+                const result = eval(expression || '0');
+                currentInput = String(Math.round(result * 100000000) / 100000000);
+            } catch {
+                currentInput = 'Error';
+            }
+            updateDisplay();
+        }
 
-// キーボード対応
-document.addEventListener('keydown',e=>{
-    if((e.key>='0'&&e.key<='9')||e.key=='.') inputNumber(e.key);
-    else if(['+','-'].includes(e.key)) inputOperator(e.key);
-    else if(e.key=='*') inputOperator('×');
-    else if(e.key=='/'){e.preventDefault();inputOperator('÷');}
-    else if(e.key=='%') inputOperator('%');
-    else if(e.key=='Enter'||e.key=='=') calculate();
-    else if(e.key=='Escape') clearAll();
-    else if(e.key=='Backspace') deleteOne();
-});
+        // キーボード対応
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9' || e.key === '.') {
+                appendValue(e.key);
+            } else if (e.key === '+' || e.key === '-') {
+                appendValue(e.key);
+            } else if (e.key === '*') {
+                appendValue('*');
+            } else if (e.key === '/') {
+                e.preventDefault();
+                appendValue('/');
+            } else if (e.key === '%') {
+                appendValue('%');
+            } else if (e.key === 'Enter' || e.key === '=') {
+                calculate();
+            } else if (e.key === 'Escape') {
+                clearDisplay();
+            } else if (e.key === 'Backspace') {
+                deleteLast();
+            }
+        });
 
-updateDisplay();
-</script>
+        // Notion埋め込み用：高さ自動調整
+        function adjustHeight() {
+            const height = calculator.scrollHeight + 40;
+            if (window.parent && window.parent.postMessage) {
+                window.parent.postMessage({ type: 'resize', height: height }, '*');
+            }
+        }
+        
+        window.addEventListener('load', adjustHeight);
+        window.addEventListener('resize', adjustHeight);
+        updateDisplay();
+    </script>
 </body>
 </html>
